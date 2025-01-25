@@ -55,6 +55,10 @@ bool process_normal(void)
 			if (is_pressed_keycode(KC_F5))		report.consumer |= _BV(FN_PREV_TRACK_BIT);
 			if (is_pressed_keycode(KC_F6))		report.consumer |= _BV(FN_NEXT_TRACK_BIT);
 
+			// change the address to allow multi-dongle setup
+			if (is_pressed_keycode(KC_F9))		rf_set_addr(DongleAddr1);
+			if (is_pressed_keycode(KC_F10))		rf_set_addr(DongleAddr2);
+
 			// if only Func and Esc are pressed
 			if (get_num_keys_pressed() == 2)
 			{
@@ -132,13 +136,26 @@ void process_lock(void)
 		sleep_ticks(0xfe);
 		sleep_ticks(0xfe);
 
-		if (matrix_scan()
-				&&  get_num_keys_pressed() == 3
-				&&  is_pressed_keycode(KC_FMNU)
-				&&  (is_pressed_keycode(KC_LCTRL)  ||  is_pressed_keycode(KC_RCTRL))
-				&&  (is_pressed_keycode(KC_DEL)  ||  is_pressed_keycode(KC_KP_DOT)))
+		if (matrix_scan())
 		{
-			break;
+			if (is_pressed_keycode(KC_FMNU))
+			{
+				const uint8_t num_keys_pressed = get_num_keys_pressed();
+
+				if (num_keys_pressed == 3
+					&&  (is_pressed_keycode(KC_LCTRL)  ||  is_pressed_keycode(KC_RCTRL))
+					&&  (is_pressed_keycode(KC_DEL)  ||  is_pressed_keycode(KC_KP_DOT)))
+				{
+					break;
+				}
+
+				if (num_keys_pressed == 2)
+				{
+					// change the address to allow multi-dongle setup
+					if (is_pressed_keycode(KC_F9))		rf_set_addr(DongleAddr1);
+					if (is_pressed_keycode(KC_F10))		rf_set_addr(DongleAddr2);
+				}
+			}
 		}
 	}
 

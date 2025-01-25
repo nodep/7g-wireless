@@ -32,7 +32,7 @@ $(TARGET).hex: $(OBJECTS)
 	$(COMPILE) -o $(TARGET).elf $(OBJECTS) $(LFLAGS)
 	rm -f $(TARGET).hex $(TARGET).eep.hex
 	avr-objcopy -j .text -j .data -O ihex $(TARGET).elf $(TARGET).hex
-	avr-size -C --mcu=$(DEVICE) $(TARGET).elf
+	avr-size $(TARGET).elf
 
 flash: all $(TARGET).hex
 	$(AVRDUDE) -U flash:w:$(TARGET).hex:i

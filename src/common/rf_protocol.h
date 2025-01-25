@@ -15,8 +15,9 @@ enum msg_type_t
 
 // communication address
 #define NRF_ADDR_SIZE	5
-extern const /*__FLASH_ATTR*/ uint8_t KeyBrdAddr[NRF_ADDR_SIZE];
-extern const /*__FLASH_ATTR*/ uint8_t DongleAddr[NRF_ADDR_SIZE];
+
+extern const uint8_t DongleAddr1[NRF_ADDR_SIZE];
+extern const uint8_t DongleAddr2[NRF_ADDR_SIZE];
 
 // the maximum number of keys that the one packet will carry
 #define MAX_KEYS		6
@@ -64,18 +65,3 @@ typedef struct
 	uint8_t		bytes_free;
 	uint8_t		bytes_capacity;
 } rf_msg_text_buff_state_t;
-
-/*
-// this one is only used for tests
-typedef struct
-{
-	uint8_t		msg_type;		// == MT_TEST
-	uint16_t	id;				// packet ID
-	uint8_t		sleep_cnt;		// num of sleep cycles
-	uint8_t		plos;			// nRF OBSERVE.PLOS
-	uint16_t	lost_cnt;		// manual lost counter
-	uint16_t	total_arc;		// sum of nRF OBSERVE.ARC
-	uint16_t	time_taken;		// in multiples of Timer2 resolution
-	uint8_t		tmr_prescaler;	// the Timer2 prescale
-} rf_msg_rep_test_t;		// sizeof() must be <= 32
-*/

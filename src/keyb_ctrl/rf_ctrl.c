@@ -24,16 +24,21 @@ uint32_t plos_total, arc_total, rf_packets_total;
 
 #define NRF_CHECK_MODULE
 
+void rf_set_addr(const uint8_t* addr)
+{
+	// write the addresses
+	nRF_WriteAddrReg(TX_ADDR, addr, NRF_ADDR_SIZE);
+
+	// we need to set the RX address to the same as TX to be
+	// able to receive ACK
+	nRF_WriteAddrReg(RX_ADDR_P0, addr, NRF_ADDR_SIZE);
+}
+
 void rf_ctrl_init(void)
 {
 	nRF_Init();
 
-	// write the addresses
-	nRF_WriteAddrReg(TX_ADDR, DongleAddr, 5);
-
-	// we need to set the RX address to the same as TX to be
-	// able to receive ACK
-	nRF_WriteAddrReg(RX_ADDR_P0, DongleAddr, 5);
+	rf_set_addr(DongleAddr1);
 
 #ifdef NRF_CHECK_MODULE
 
@@ -46,9 +51,9 @@ void rf_ctrl_init(void)
 	nRF_ReadAddrReg(TX_ADDR, 5);	// read the address back
 
 	// compare
-	if (memcmp(nRF_data + 1, &DongleAddr, 5) != 0)
+	if (memcmp(nRF_data + 1, &DongleAddr1, NRF_ADDR_SIZE) != 0)
 	{
-		printf("buff=%02x %02x %02x %02x %02x\n", DongleAddr[0], DongleAddr[1], DongleAddr[2], DongleAddr[3], DongleAddr[4]);
+		printf("buff=%02x %02x %02x %02x %02x\n", DongleAddr1[0], DongleAddr1[1], DongleAddr1[2], DongleAddr1[3], DongleAddr1[4]);
 		printf("nRF_=%02x %02x %02x %02x %02x\n", nRF_data[1], nRF_data[2], nRF_data[3], nRF_data[4], nRF_data[5]);
 		
 		// toggle the CAPS LED forever
@@ -108,7 +113,7 @@ bool rf_ctrl_send_message(const void* buff, const uint8_t num_bytes)
 
 		nRF_CE_lo();
 
-		uint8_t status = nRF_NOP();			// read the status reg
+		const uint8_t status = nRF_NOP();	// read the status reg
 		is_sent = (status & vTX_DS) != 0;	// did we get an ACK?
 
 		nRF_WriteReg(STATUS, vMAX_RT | vTX_DS | vRX_DR);	// reset the status flags
