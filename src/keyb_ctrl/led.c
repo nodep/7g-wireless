@@ -144,19 +144,19 @@ void start_led_sequence(const __flash led_sequence_t* seq)
 // LED sequences
 const __flash led_sequence_t led_seq_boot[] =
 {
-	{1, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
-	{2, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
-	{1, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
-	{2, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
-	{1, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
-	{2, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
-	{1, 5, USER_BRIGHTNESS, 0},
+	{1, 7, USER_BRIGHTNESS, 0},
+	{4, 7, USER_BRIGHTNESS, 0},
+	{2, 7, USER_BRIGHTNESS, 0},
+	{4, 7, USER_BRIGHTNESS, 0},
+	{1, 7, USER_BRIGHTNESS, 0},
+	{4, 7, USER_BRIGHTNESS, 0},
+	{2, 7, USER_BRIGHTNESS, 0},
+	{4, 7, USER_BRIGHTNESS, 0},
+	{1, 7, USER_BRIGHTNESS, 0},
+	{4, 7, USER_BRIGHTNESS, 0},
+	{2, 7, USER_BRIGHTNESS, 0},
+	{4, 7, USER_BRIGHTNESS, 0},
+	{1, 7, USER_BRIGHTNESS, 0},
 	
 	{0,0,0,0},
 };
@@ -195,8 +195,8 @@ const __flash led_sequence_t led_seq_pulse_off[] =
 
 const __flash led_sequence_t led_seq_lock[] =
 {
-	{3, 5, USER_BRIGHTNESS, 0},
-	{4, 5, USER_BRIGHTNESS, 0},
+	{3, 9, USER_BRIGHTNESS, 0},
+	{4, 9, USER_BRIGHTNESS, 0},
 	
 	{0,0,0,0},
 };

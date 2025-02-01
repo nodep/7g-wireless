@@ -8,12 +8,13 @@
 
 #define NRF_CHECK_MODULE
 
+
 void rf_dngl_init(void)
 {
 	nRF_Init();
 
 	// set the addresses
-	nRF_WriteAddrReg(RX_ADDR_P0, DongleAddr2, NRF_ADDR_SIZE);
+	nRF_WriteAddrReg(RX_ADDR_P0, DongleAddr1, NRF_ADDR_SIZE);
 
 #if defined(NRF_CHECK_MODULE) && defined(AVR)
 
@@ -26,7 +27,7 @@ void rf_dngl_init(void)
 	nRF_ReadAddrReg(RX_ADDR_P0, NRF_ADDR_SIZE);	// read the address back
 	
 	// compare
-	if (memcmp(nRF_data + 1, &DongleAddr2, NRF_ADDR_SIZE) != 0)
+	if (memcmp(nRF_data + 1, &DongleAddr1, NRF_ADDR_SIZE) != 0)
 	{
 		//printf("buff=%02x %02x %02x %02x %02x\n", buff[0], buff[1], buff[2], buff[3], buff[4]);
 		//printf("nRF_=%02x %02x %02x %02x %02x\n", nRF_data[1], nRF_data[2], nRF_data[3], nRF_data[4], nRF_data[5]);

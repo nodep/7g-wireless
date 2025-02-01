@@ -48,6 +48,7 @@ void main()
 	bool consumer_report_ready = false;
 
 	uint8_t prev_keycode = KC_NO;
+	uint8_t modifier_step = 0;
 	
 	__xdata uint8_t recv_buffer[RECV_BUFF_SIZE];
 	__xdata uint8_t bytes_received;
@@ -88,27 +89,59 @@ void main()
 
 		if (!keyboard_report_ready  &&  !msg_empty())
 		{
-			// get the next char from the stored text message
+			// peek the next char from the stored text message
 			uint8_t c = msg_peek();
 			uint8_t new_keycode = get_keycode_for_char(c);
+			uint8_t new_modifiers = get_modifiers_for_char(c);
 
 			reset_keyboard_report();
 
-			// if the keycode is different than the previous
-			// otherwise just send an empty report to simulate key went up
-			if (new_keycode != prev_keycode  ||  new_keycode == KC_NO)
-			{
-				usb_keyboard_report.keys[0] = new_keycode;
-				usb_keyboard_report.modifiers = get_modifiers_for_char(c);
-				
-				msg_pop();	// remove char from the buffer
-			} else {
-				new_keycode = KC_NO;
-			}
-			
+			// Linux seems to be a bit finicky when it comes to the order in the which the keys and
+			// modifiers are received. So we have to do a keystroke sequence to get the desired result
+	        if (new_modifiers != 0)
+	        {
+				if (modifier_step == 0)
+				{
+					// no keys are down
+	                ++modifier_step;
+				}
+	            else if (modifier_step == 1)
+	            {
+					// sends KC_NO and the modifier
+	                usb_keyboard_report.modifiers = new_modifiers;
+	                ++modifier_step;
+	            }
+	            else if (modifier_step == 2)
+	            {
+					// sends the keystroke and the modifier
+	                usb_keyboard_report.keys[0] = new_keycode;
+	                usb_keyboard_report.modifiers = new_modifiers;
+	                ++modifier_step;
+	            }
+	            else if (modifier_step == 3)
+	            {
+					// sends KC_NO and the modifier
+	                usb_keyboard_report.modifiers = new_modifiers;
+	                ++modifier_step;
+	            }
+	            else if (modifier_step == 4)
+				{
+					// no keys are down
+	                modifier_step = 0;
+	                msg_pop();	// remove char from the buffer
+				}
+	        }
+	        else if (new_keycode != prev_keycode  ||  new_keycode == KC_NO)
+	        {
+	            usb_keyboard_report.keys[0] = new_keycode;
+	            usb_keyboard_report.modifiers = new_modifiers;
+
+	            msg_pop();	// remove char from the buffer
+	        } else {
+	            new_keycode = KC_NO;
+	        }			
+			prev_keycode = new_keycode;
 			keyboard_report_ready = true;
-			
-			prev_keycode = new_keycode;		// remember for later
 		}
 		
 		// send the report if the endpoint is not busy

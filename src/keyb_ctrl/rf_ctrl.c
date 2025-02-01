@@ -48,7 +48,7 @@ void rf_ctrl_init(void)
 	nRF_data[4] = 0;
 	nRF_data[5] = 0;
 
-	nRF_ReadAddrReg(TX_ADDR, 5);	// read the address back
+	nRF_ReadAddrReg(TX_ADDR, NRF_ADDR_SIZE);	// read the address back
 
 	// compare
 	if (memcmp(nRF_data + 1, &DongleAddr1, NRF_ADDR_SIZE) != 0)
